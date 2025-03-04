@@ -2,6 +2,8 @@ import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from replit import db
 from keep_alive import keep_alive
+import psycopg2
+import os
 
 keep_alive()
 
@@ -108,10 +110,6 @@ def check_subscription(call):
             user_id,
             "❌ Вы всё ещё не подписаны на все каналы. Подпишитесь и попробуйте ещё раз."
         )
-
-
-import psycopg2
-import os
 
 # Получаем URL подключения из переменных окружения (предполагается, что ты настроил Railway для работы с PostgreSQL)
 DATABASE_URL = os.getenv('DATABASE_URL')
