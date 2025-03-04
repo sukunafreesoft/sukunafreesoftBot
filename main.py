@@ -110,7 +110,7 @@ def check_subscription(call):
         )
 
 # Получаем URL подключения из переменных окружения (предполагается, что ты настроил Railway для работы с PostgreSQL)
-DATABASE_URL = os.getenv('DATABASE_URL')
+DATABASE_URL = os.getenv('postgresql://${{PGUSER}}:${{POSTGRES_PASSWORD}}@${{RAILWAY_PRIVATE_DOMAIN}}:5432/${{PGDATABASE}}')
 
 
 # Функция для подключения к базе данных и добавления пользователя в таблицу
