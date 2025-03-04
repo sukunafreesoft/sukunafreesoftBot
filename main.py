@@ -110,10 +110,11 @@ def check_subscription(call):
         )
 
 
-# === ПОДСЧЕТ ПОЛЬЗОВАТЕЛЕЙ ===
 @bot.message_handler(commands=["users"])
 def get_users_count(message):
-    count = len(list(db.keys()) if db is not None else [])  # Количество пользователей
+    print("Команда /users вызвана!")  # Проверка
+    count = len(db.keys())  # Количество пользователей
+    print(f"Пользователей в базе: {count}")  # Проверка
     bot.send_message(message.chat.id, f"Запустили бота: {count}")
 
 
