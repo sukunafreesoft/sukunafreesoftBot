@@ -35,9 +35,10 @@ def is_subscribed(user_id):
 # === ГЛАВНОЕ МЕНЮ ===
 @bot.message_handler(commands=["start"])
 def send_welcome(message):
-    user_id = str(
-        message.chat.id)  # Используем строку для хранения в Replit DB
-    if user_id not in db:
+    user_id = str(message.chat.id)  # Используем строку для хранения в Replit DB
+
+    # Проверяем, существует ли база и содержит ли ключи
+    if db is not None and user_id not in db.keys():
         db[user_id] = True  # Добавляем нового пользователя в базу данных Replit
 
     markup = InlineKeyboardMarkup()
@@ -112,7 +113,7 @@ def check_subscription(call):
 # === ПОДСЧЕТ ПОЛЬЗОВАТЕЛЕЙ ===
 @bot.message_handler(commands=["users"])
 def get_users_count(message):
-    count = len(db.keys())  # Количество пользователей
+    count = len(list(db.keys()) if db is not None else [])  # Количество пользователей
     bot.send_message(message.chat.id, f"Запустили бота: {count}")
 
 
