@@ -113,6 +113,11 @@ def check_subscription(call):
 @bot.message_handler(commands=["users"])
 def get_users_count(message):
     print("Команда /users вызвана!")  # Проверка
+    if db is None:
+    bot.send_message(message.chat.id, "❌ Ошибка: база данных недоступна!")
+    return
+    print(f"db: {db}")  # Логируем в Railway
+bot.send_message(message.chat.id, f"db: {db}")  # Проверяем в боте
     count = len(db.keys())  # Количество пользователей
     print(f"Пользователей в базе: {count}")  # Проверка
     bot.send_message(message.chat.id, f"Запустили бота: {count}")
