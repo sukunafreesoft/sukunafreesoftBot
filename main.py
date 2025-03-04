@@ -1,9 +1,8 @@
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-from replit import db
-from keep_alive import keep_alive
 import psycopg2
 import os
+from keep_alive import keep_alive
 
 keep_alive()
 
@@ -21,6 +20,8 @@ FILES = {
 
 bot = telebot.TeleBot(TOKEN)
 
+# Получаем URL подключения из переменных окружения
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 # === ФУНКЦИЯ ПРОВЕРКИ ПОДПИСКИ ===
 def is_subscribed(user_id):
@@ -33,6 +34,26 @@ def is_subscribed(user_id):
             return False
     return True
 
+# === ФУНКЦИЯ ПОДКЛЮЧЕНИЯ К БАЗЕ ДАННЫХ ===
+def get_users_count():
+    try:
+        # Подключаемся к базе данных PostgreSQL
+        conn = psycopg2.connect(DATABASE_URL)
+        cursor = conn.cursor()
+        
+        # Выполняем SQL-запрос для подсчета пользователей
+        cursor.execute("SELECT COUNT(*) FROM users;")  # Замените users на свою таблицу
+        result = cursor.fetchone()
+        
+        return result[0]  # Количество пользователей
+        
+    except Exception as e:
+        print(f"Ошибка при работе с базой данных: {e}")
+        return None
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
 
 # === ГЛАВНОЕ МЕНЮ ===
 @bot.message_handler(commands=["start"])
@@ -111,31 +132,7 @@ def check_subscription(call):
             "❌ Вы всё ещё не подписаны на все каналы. Подпишитесь и попробуйте ещё раз."
         )
 
-# Получаем URL подключения из переменных окружения (предполагается, что ты настроил Railway для работы с PostgreSQL)
-DATABASE_URL = os.getenv('DATABASE_URL')
-
-# Функция для подключения к базе данных и получения количества пользователей
-def get_users_count():
-    try:
-        # Подключаемся к базе данных PostgreSQL
-        conn = psycopg2.connect(DATABASE_URL)
-        cursor = conn.cursor()
-        
-        # Выполняем SQL-запрос для подсчета пользователей
-        cursor.execute("SELECT COUNT(*) FROM users;")  # Замените users на свою таблицу
-        result = cursor.fetchone()
-        
-        return result[0]  # Количество пользователей
-        
-    except Exception as e:
-        print(f"Ошибка при работе с базой данных: {e}")
-        return None
-    finally:
-        if conn:
-            cursor.close()
-            conn.close()
-
-# Команда /users
+# === КОМАНДА /USERS ===
 @bot.message_handler(commands=["users"])
 def get_users_count_command(message):
     count = get_users_count()
@@ -144,8 +141,6 @@ def get_users_count_command(message):
         bot.send_message(message.chat.id, "❌ Ошибка при получении данных из базы.")
     else:
         bot.send_message(message.chat.id, f"Запустили бота: {count} пользователей.")
-
-
 
 # === ЗАПУСК БОТА ===
 bot.polling(none_stop=True)
