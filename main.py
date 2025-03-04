@@ -115,6 +115,7 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 
 # Функция для подключения к базе данных и добавления пользователя в таблицу
 def add_user_to_db(user_id):
+    conn = None  # Инициализируем переменную conn
     try:
         # Подключаемся к базе данных PostgreSQL
         conn = psycopg2.connect(DATABASE_URL)
@@ -136,6 +137,7 @@ def add_user_to_db(user_id):
 
 # Функция для получения количества пользователей
 def get_users_count():
+    conn = None  # Инициализируем переменную conn
     try:
         # Подключаемся к базе данных PostgreSQL
         conn = psycopg2.connect(DATABASE_URL)
