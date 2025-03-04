@@ -110,19 +110,43 @@ def check_subscription(call):
         )
 
 
+import psycopg2
+import os
+
+# Получаем URL подключения из переменных окружения (предполагается, что ты настроил Railway для работы с PostgreSQL)
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+# Функция для подключения к базе данных и получения количества пользователей
+def get_users_count():
+    try:
+        # Подключаемся к базе данных PostgreSQL
+        conn = psycopg2.connect(DATABASE_URL)
+        cursor = conn.cursor()
+        
+        # Выполняем SQL-запрос для подсчета пользователей
+        cursor.execute("SELECT COUNT(*) FROM users;")  # Замените users на свою таблицу
+        result = cursor.fetchone()
+        
+        return result[0]  # Количество пользователей
+        
+    except Exception as e:
+        print(f"Ошибка при работе с базой данных: {e}")
+        return None
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
+
+# Команда /users
 @bot.message_handler(commands=["users"])
-def get_users_count(message):
-    print("Команда /users вызвана!")  # Проверка
-    if db is None:
-        bot.send_message(message.chat.id, "❌ Ошибка: база данных недоступна!")
-        return
+def get_users_count_command(message):
+    count = get_users_count()
+    
+    if count is None:
+        bot.send_message(message.chat.id, "❌ Ошибка при получении данных из базы.")
+    else:
+        bot.send_message(message.chat.id, f"Запустили бота: {count} пользователей.")
 
-    print(f"db: {db}")  # Логируем в консоль
-    bot.send_message(message.chat.id, f"db: {db}")  # Проверяем в боте
-
-    count = len(db.keys())  # Количество пользователей
-    print(f"Пользователей в базе: {count}")  # Проверка
-    bot.send_message(message.chat.id, f"Запустили бота: {count} пользователей.")
 
 
 # === ЗАПУСК БОТА ===
