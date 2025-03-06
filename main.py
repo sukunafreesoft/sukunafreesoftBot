@@ -17,8 +17,8 @@ FILES = {
 
 # Тексты, которые будут отправляться вместе с файлами
 TEXTS = {
-    "✅ - [PC] NerestPC Free 0.32.3 💻": "[Туториал](https://t.me/sukunasoft/168)",
-    "✅ - [Android ROOT] Excellent Crack 0.32.3 📱": "[Туториала пока нет](https://t.me/sukunasoft)"
+    "✅ - [PC] NerestPC Free 0.32.3 💻": "[Туториала пока нет](https://t.me/sukunasoft)",
+    "✅ - [Android ROOT] Excellent Crack 0.32.3 📱": "[Туториал](https://t.me/sukunasoft/168)"
 }
 
 bot = telebot.TeleBot(TOKEN)
