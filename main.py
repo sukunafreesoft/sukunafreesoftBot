@@ -46,7 +46,7 @@ def send_welcome(message):
                      "\n"
                      ">Но сначала подпишитесь на проекты создателя"
                      "\n"
-                     ">https://t.me/+iAkSMGQw7J8yNzQ8"
+                     ">@perexodniksukuna"
                      "\n"
                      ">@sukunasoft",
                      reply_markup=markup,
@@ -81,7 +81,7 @@ def send_file(call):
         for channel in CHANNELS:
             markup.add(
                 InlineKeyboardButton(f"Подписаться на {channel}",
-                                     url=f"https://t.me/+{channel[1:]}"))
+                                     url=f"https://t.me/{channel[1:]}"))
         markup.add(
             InlineKeyboardButton("🔄 Проверить подписку",
                                  callback_data="check_sub"))
