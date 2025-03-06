@@ -8,7 +8,7 @@ keep_alive()
 
 # === НАСТРОЙКИ ===
 TOKEN = "7191146491:AAFqpXRbyKKac6sw_wKfeP-c0n_CYU9gScM"  # Замени на свой токен
-CHANNELS = ["@sukunasoft"]  # Каналы для подписки
+CHANNELS = ["@perexodniksukuna", "@sukunasoft"]  # Каналы для подписки
 
 # Вместо ссылок храним file_id (полученные ранее)
 FILES = {
