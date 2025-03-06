@@ -6,7 +6,7 @@ from keep_alive import keep_alive
 keep_alive()
 
 # === НАСТРОЙКИ ===
-TOKEN = "7588669661:AAHm2L9C3LfMAYmuodztMjqssFePX_eAyds"  # Замени на свой токен
+TOKEN = "7191146491:AAFqpXRbyKKac6sw_wKfeP-c0n_CYU9gScM"  # Замени на свой токен
 CHANNELS = ["@perexodniksukuna", "@sukunasoft"]  # Каналы для подписки
 
 # Вместо ссылок храним file_id (полученные ранее)
@@ -17,8 +17,8 @@ FILES = {
 
 # Тексты, которые будут отправляться вместе с файлами
 TEXTS = {
-    "✅ - [PC] NerestPC Free 0.32.3 💻": "⁉️[Туториал](https://t.me/sukunasoft/168)",
-    "✅ - [Android ROOT] Excellent Crack 0.32.3 📱": "⁉️[Туториала пока нет](https://t.me/sukunasoft)"
+    "✅ - [PC] NerestPC Free 0.32.3 💻": "[Туториал](https://t.me/sukunasoft/168)",
+    "✅ - [Android ROOT] Excellent Crack 0.32.3 📱": "[Туториала пока нет](https://t.me/sukunasoft)"
 }
 
 bot = telebot.TeleBot(TOKEN)
