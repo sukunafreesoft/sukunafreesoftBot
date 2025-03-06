@@ -81,7 +81,7 @@ def send_file(call):
         for channel in CHANNELS:
             markup.add(
                 InlineKeyboardButton(f"Подписаться на {channel}",
-                                     url=f"https://t.me/{channel[1:]}"))
+                                     url=f"https://t.me/+{channel[1:]}"))
         markup.add(
             InlineKeyboardButton("🔄 Проверить подписку",
                                  callback_data="check_sub"))
