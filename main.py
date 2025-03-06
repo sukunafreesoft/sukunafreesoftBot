@@ -8,7 +8,7 @@ keep_alive()
 
 # === НАСТРОЙКИ ===
 TOKEN = "7191146491:AAFqpXRbyKKac6sw_wKfeP-c0n_CYU9gScM"  # Замени на свой токен
-CHANNELS = ["@sukunafreesoft", "@sukunasoft"]  # Каналы для подписки
+CHANNELS = ["https://t.me/+iAkSMGQw7J8yNzQ8", "@sukunasoft"]  # Каналы для подписки
 
 # Вместо ссылок храним file_id (полученные ранее)
 FILES = {
@@ -44,9 +44,9 @@ def send_welcome(message):
     bot.send_message(message.chat.id, "*Выберите файл для скачивания:*"
                      "\n"
                      "\n"
-                     ">Но сначала подпишитесь на каналы создателя"
+                     ">Но сначала подпишитесь на проекты создателя"
                      "\n"
-                     ">@sukunafreesoft"
+                     ">https://t.me/+iAkSMGQw7J8yNzQ8"
                      "\n"
                      ">@sukunasoft",
                      reply_markup=markup,
@@ -81,7 +81,7 @@ def send_file(call):
         for channel in CHANNELS:
             markup.add(
                 InlineKeyboardButton(f"Подписаться на {channel}",
-                                     url=f"https://t.me/{channel[1:]}"))
+                                     url=f"{channel[1:]}"))
         markup.add(
             InlineKeyboardButton("🔄 Проверить подписку",
                                  callback_data="check_sub"))
