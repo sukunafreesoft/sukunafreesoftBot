@@ -1,27 +1,25 @@
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+from referral import handle_referral, get_user_referrals  
 
-# === НАСТРОЙКИ ===
-TOKEN = "7191146491:AAFqpXRbyKKac6sw_wKfeP-c0n_CYU9gScM"  # Замени на свой токен
-CHANNELS = ["@sukunasoft", "@perexodniksukuna"]  # Каналы для подписки
+TOKEN = "7191146491:AAFqpXRbyKKac6sw_wKfeP-c0n_CYU9gScM"  
+CHANNELS = ["@sukunasoft", "@perexodniksukuna"]  
 
-# Вместо ссылок храним file_id (полученные ранее)
-FILES = {
-    "💻[PC] NerestPC Free 0.32.3": "BQACAgQAAxkBAAMeZ8mX5HupwDAyqWU82kRZFIY3iO4AAnwZAAJbzThSdA6U8VArn002BA",
-    "📱[Android ROOT] Excellent Crack 0.32.3": "BQACAgQAAxkBAAMfZ8mX5LJ3TPKEAfjakG2psV1W35wAAogZAAJbzThSN_kk0FblCfI2BA"
+FILES_PC = {
+    "💻 [PC] NerestPC Free 0.32.3": "BQACAgQAAxkBAAMeZ8mX5HupwDAyqWU82kRZFIY3iO4AAnwZAAJbzThSdA6U8VArn002BA",
+}
+
+FILES_ANDROID = {
+    "📱 [Android ROOT] Excellent Crack 0.32.3": "BQACAgQAAxkBAAMfZ8mX5LJ3TPKEAfjakG2psV1W35wAAogZAAJbzThSN_kk0FblCfI2BA"
 }
 
 TEXTS = {
-    "💻[PC] NerestPC Free 0.32.3": "ℹ️[Туториала пока нет](https://t.me/sukunasoft)",
-    "📱[Android ROOT] Excellent Crack 0.32.3": "ℹ️[Туториал](https://t.me/sukunasoft/168)"
+    "💻 [PC] NerestPC Free 0.32.3": "ℹ️[Туториала пока нет](https://t.me/sukunasoft)",
+    "📱 [Android ROOT] Excellent Crack 0.32.3": "ℹ️[Туториал](https://t.me/sukunasoft/168)"
 }
 
 bot = telebot.TeleBot(TOKEN)
 
-# Словарь для хранения ID последнего отправленного сообщения (не меню)
-last_response = {}
-
-# === ФУНКЦИЯ ПРОВЕРКИ ПОДПИСКИ ===
 def is_subscribed(user_id):
     for channel in CHANNELS:
         try:
@@ -32,81 +30,90 @@ def is_subscribed(user_id):
             return False
     return True
 
-# === ГЛАВНОЕ МЕНЮ ===
 @bot.message_handler(commands=["start"])
 def send_welcome(message):
     user_id = message.chat.id
+    handle_referral(user_id, message.text)  
 
     markup = InlineKeyboardMarkup()
-    for app_name in FILES.keys():
+    markup.add(InlineKeyboardButton("📥 Скачать файлы", callback_data="download_files"))
+    markup.add(InlineKeyboardButton("👤 Профиль", callback_data="profile"))
+
+    bot.send_message(user_id, "🎉 Добро пожаловать! Выберите действие:", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda call: call.data == "download_files")
+def send_download_menu(call):
+    user_id = call.from_user.id
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton("📱 Android", callback_data="android_files"))
+    markup.add(InlineKeyboardButton("💻 ПК", callback_data="pc_files"))
+    markup.add(InlineKeyboardButton("🔙 Назад", callback_data="back_main"))
+
+    bot.send_message(user_id, "🔽 Выберите категорию:", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda call: call.data == "android_files")
+def send_android_files(call):
+    user_id = call.from_user.id
+    markup = InlineKeyboardMarkup()
+    for app_name in FILES_ANDROID.keys():
         markup.add(InlineKeyboardButton(app_name, callback_data=app_name))
-    
-    bot.send_message(
-        user_id,
-        "🔽 *Выберите файл для скачивания:* 🔽\n\n"
-        "☣️ *Но сначала подпишитесь на проекты создателя:* ☣️\n"
-        "🔗 [@sukunasoft](https://t.me/sukunasoft)\n"
-        "🔗 [@perexodniksukuna](https://t.me/perexodniksukuna)",
-        reply_markup=markup,
-        parse_mode="Markdown"
-    )
 
-# === ФУНКЦИЯ УДАЛЕНИЯ ПРЕДЫДУЩЕГО СООБЩЕНИЯ (КРОМЕ МЕНЮ) ===
-def delete_last_response(user_id):
-    if user_id in last_response:
-        try:
-            bot.delete_message(user_id, last_response[user_id])
-        except Exception:
-            pass  # Если сообщение уже удалено, просто игнорируем
+    markup.add(InlineKeyboardButton("🔙 Назад", callback_data="download_files"))
+    bot.send_message(user_id, "📱 Выберите Android-приложение:", reply_markup=markup)
 
-# === ОБРАБОТКА ВЫБОРА ФАЙЛА ===
-@bot.callback_query_handler(func=lambda call: call.data in FILES)
+@bot.callback_query_handler(func=lambda call: call.data == "pc_files")
+def send_pc_files(call):
+    user_id = call.from_user.id
+    markup = InlineKeyboardMarkup()
+    for app_name in FILES_PC.keys():
+        markup.add(InlineKeyboardButton(app_name, callback_data=app_name))
+
+    markup.add(InlineKeyboardButton("🔙 Назад", callback_data="download_files"))
+    bot.send_message(user_id, "💻 Выберите программу для ПК:", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda call: call.data in FILES_PC or call.data in FILES_ANDROID)
 def send_file(call):
     user_id = call.from_user.id
-    delete_last_response(user_id)  # Удаляем старое сообщение (не меню!)
-
     if is_subscribed(user_id):
-        file_id = FILES.get(call.data)
+        file_id = FILES_PC.get(call.data) or FILES_ANDROID.get(call.data)
         caption = TEXTS.get(call.data, "ℹ Инструкции пока нет.")
-
-        try:
-            sent_message = bot.send_document(user_id, file_id, caption=caption, parse_mode="Markdown")
-            last_response[user_id] = sent_message.message_id  # Запоминаем ID нового сообщения
-        except Exception as e:
-            error_message = bot.send_message(user_id, f"❌ Ошибка при отправке файла: {str(e)}")
-            last_response[user_id] = error_message.message_id
+        bot.send_document(user_id, file_id, caption=caption, parse_mode="Markdown")
     else:
         send_subscription_request(user_id)
 
-# === ПРОСЬБА ПОДПИСАТЬСЯ ===
+@bot.callback_query_handler(func=lambda call: call.data == "profile")
+def send_profile(call):
+    user_id = call.from_user.id
+    referrals = get_user_referrals(user_id)  
+
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton("📩 Пригласить друга", callback_data="send_invite_link"))
+    markup.add(InlineKeyboardButton("🔙 Назад", callback_data="back_main"))
+
+    bot.send_message(user_id, f"👤 Ваш профиль:\n👥 Приглашено пользователей: {referrals}", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda call: call.data == "send_invite_link")
+def send_invite_link(call):
+    user_id = call.from_user.id
+    invite_link = f"https://t.me/sukunafreesoftBot?start={user_id}"
+    bot.send_message(user_id, f"📩 Ваша реферальная ссылка:\n{invite_link}")
+
 def send_subscription_request(user_id):
     markup = InlineKeyboardMarkup()
     for channel in CHANNELS:
         markup.add(InlineKeyboardButton(f"Подписаться на {channel}", url=f"https://t.me/{channel[1:]}"))
     markup.add(InlineKeyboardButton("🔄 Проверить подписку", callback_data="check_sub"))
 
-    sent_message = bot.send_message(
-        user_id,
-        "❌ *Ты не подписан на все проекты!*\n\nПодпишись и попробуй ещё.",
-        reply_markup=markup,
-        parse_mode="Markdown"
-    )
-    last_response[user_id] = sent_message.message_id  # Сохраняем ID нового сообщения
+    bot.send_message(user_id, "❌ Вы не подписаны на все каналы! Подпишитесь и попробуйте снова.", reply_markup=markup, parse_mode="Markdown")
 
-# === ПРОВЕРКА ПОДПИСКИ ===
 @bot.callback_query_handler(func=lambda call: call.data == "check_sub")
 def check_subscription(call):
     user_id = call.from_user.id
-    delete_last_response(user_id)  # Удаляем предыдущее сообщение
-
     if is_subscribed(user_id):
-        sent_message = bot.send_message(user_id, "✅ Подписка обнаружена! Теперь выбери файл для скачивания.")
+        bot.send_message(user_id, "✅ Подписка обнаружена! Теперь выберите файл для скачивания.")
     else:
-        sent_message = bot.send_message(user_id, "❌ Ты всё ещё не подписан на все проекты. Подпишись и попробуй ещё раз.")
+        send_subscription_request(user_id)
 
-    last_response[user_id] = sent_message.message_id  # Сохраняем ID нового сообщения
-
-# === ОБРАБОТКА ФАЙЛОВ ДЛЯ ПОЛУЧЕНИЯ FILE_ID ===
 @bot.message_handler(content_types=["document", "video", "audio", "photo"])
 def get_file_id(message):
     if message.document:
@@ -116,9 +123,26 @@ def get_file_id(message):
     elif message.audio:
         file_id = message.audio.file_id
     elif message.photo:
-        file_id = message.photo[-1].file_id  # Берем самое большое фото
-    
+        file_id = message.photo[-1].file_id  
+
     bot.send_message(message.chat.id, f"📎 File ID: `{file_id}`", parse_mode="Markdown")
 
-# === ЗАПУСК БОТА ===
+@bot.message_handler(commands=["clear"])
+def delete_chat_history(message):
+    user_id = message.chat.id
+    try:
+        for i in range(message.message_id, message.message_id - 100, -1):
+            bot.delete_message(user_id, i)
+    except Exception:
+        pass  
+    bot.send_message(user_id, "✅ История чата очищена!")
+
+@bot.callback_query_handler(func=lambda call: call.data == "back_main")
+def back_to_main(call):
+    send_welcome(call.message)
+
+@bot.callback_query_handler(func=lambda call: call.data == "download_files")
+def back_to_download(call):
+    send_download_menu(call)
+
 bot.polling(none_stop=True)
