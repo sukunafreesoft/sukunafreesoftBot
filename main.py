@@ -1,9 +1,9 @@
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-from referral import handle_referral, get_user_referrals  
+from referral import handle_referral, get_user_referrals
 
-TOKEN = "7191146491:AAFqpXRbyKKac6sw_wKfeP-c0n_CYU9gScM"  
-CHANNELS = ["@sukunasoft", "@perexodniksukuna"]  
+TOKEN = "7921072593:AAEQAb7ybkanxd2O-zzk_D9Z8IgWb-dYLNM"
+CHANNELS = ["@sukunasoft", "@perexodniksukuna"]
 
 FILES_PC = {
     "💻 [PC] NerestPC Free 0.32.3": "BQACAgQAAxkBAAMeZ8mX5HupwDAyqWU82kRZFIY3iO4AAnwZAAJbzThSdA6U8VArn002BA",
@@ -33,13 +33,14 @@ def is_subscribed(user_id):
 @bot.message_handler(commands=["start"])
 def send_welcome(message):
     user_id = message.chat.id
-    handle_referral(user_id, message.text)  
+    handle_referral(user_id, message.text)
 
     markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton("📥 Скачать файлы", callback_data="download_files"))
+    markup.add(InlineKeyboardButton("📥 Софт", callback_data="download_files"))
+    markup.add(InlineKeyboardButton("ℹ Как установить ROOT", callback_data="tutor_root"))
     markup.add(InlineKeyboardButton("👤 Профиль", callback_data="profile"))
 
-    bot.send_message(user_id, "🎉 Добро пожаловать! Выберите действие:", reply_markup=markup)
+    bot.send_message(user_id, "🗿 Доброго времени суток, выбирай что хочешь. \n\nНо сначала подпишись на мои проекты: \n Канал: @sukunasoft \n\nПереходник: @perexodniksukuna", reply_markup=markup)
 
 @bot.callback_query_handler(func=lambda call: call.data == "download_files")
 def send_download_menu(call):
@@ -84,7 +85,7 @@ def send_file(call):
 @bot.callback_query_handler(func=lambda call: call.data == "profile")
 def send_profile(call):
     user_id = call.from_user.id
-    referrals = get_user_referrals(user_id)  
+    referrals = get_user_referrals(user_id)
 
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton("📩 Пригласить друга", callback_data="send_invite_link"))
@@ -123,19 +124,9 @@ def get_file_id(message):
     elif message.audio:
         file_id = message.audio.file_id
     elif message.photo:
-        file_id = message.photo[-1].file_id  
+        file_id = message.photo[-1].file_id
 
     bot.send_message(message.chat.id, f"📎 File ID: `{file_id}`", parse_mode="Markdown")
-
-@bot.message_handler(commands=["clear"])
-def delete_chat_history(message):
-    user_id = message.chat.id
-    try:
-        for i in range(message.message_id, message.message_id - 100, -1):
-            bot.delete_message(user_id, i)
-    except Exception:
-        pass  
-    bot.send_message(user_id, "✅ История чата очищена!")
 
 @bot.callback_query_handler(func=lambda call: call.data == "back_main")
 def back_to_main(call):
@@ -144,5 +135,33 @@ def back_to_main(call):
 @bot.callback_query_handler(func=lambda call: call.data == "download_files")
 def back_to_download(call):
     send_download_menu(call)
+
+# Новый обработчик для кнопки Root
+@bot.callback_query_handler(func=lambda call: call.data == "tutor_root")
+def send_root_tutorial(call):
+    user_id = call.from_user.id
+    tutorial_text = """
+    🚀 Установка Root, на разные девайсы.
+
+Установка рут прав на Xiaomi - 
+https://youtu.be/JT8Vyr8drpY?si=IgCTKJ7NFIgWSC2d
+
+Установка рут прав на Samsung -
+https://youtu.be/nL0nCvRnCtM?si=4d4OJffUsrbuB6UW
+
+Установка рут прав на infinix -
+https://youtu.be/3qZ-lG34_RE?si=awY0y83IhFVQkrbN
+
+Установка рут прав на Realme - 
+https://youtu.be/SV0JjAaxx68?si=ImwrfZuSc_luU1uS
+
+Через тврп - 
+https://youtu.be/sEvy6r5unpY?si=UgmcovIkIb--BYVM
+
+❗Если вашего устройства нет в списке, то устанавливайте TWRP и ставьте рут через него
+
+❗Если нужна помощь можете обратиться в [наш чат](https://t.me/+iAkSMGQw7J8yNzQ8)
+    """
+    bot.send_message(user_id, tutorial_text, parse_mode="Markdown")
 
 bot.polling(none_stop=True)
