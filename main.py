@@ -2,7 +2,7 @@ import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from referral import handle_referral, get_user_referrals
 
-TOKEN = "7921072593:AAEQAb7ybkanxd2O-zzk_D9Z8IgWb-dYLNM"
+TOKEN = "7191146491:AAFqpXRbyKKac6sw_wKfeP-c0n_CYU9gScM"
 CHANNELS = ["@sukunasoft", "@perexodniksukuna"]
 
 FILES_PC = {
