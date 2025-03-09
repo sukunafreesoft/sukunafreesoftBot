@@ -7,6 +7,7 @@ CHANNELS = ["@sukunasoft", "@perexodniksukuna"]
 
 FILES_PC = {
     "💻 [PC] NerestPC Free 0.32.3": "BQACAgQAAxkBAAMeZ8mX5HupwDAyqWU82kRZFIY3iO4AAnwZAAJbzThSdA6U8VArn002BA",
+    "💻 [PC] Nerest External Crack 0.32.3": "BQACAgQAAyEFAASKyTTrAAMJZ835OFwKHy8evhYWprdkppcxIQUAAkwWAAJ6nnBSX35kPXkcWrk2BA"
 }
 
 FILES_ANDROID = {
@@ -15,6 +16,7 @@ FILES_ANDROID = {
 
 TEXTS = {
     "💻 [PC] NerestPC Free 0.32.3": "ℹ️[Туториала пока нет](https://t.me/sukunasoft)",
+    "💻 [PC] Nerest External Crack 0.32.3": "ℹ️[Туториала пока нет](https://t.me/sukunasoft)",
     "📱 [Android ROOT] Excellent Crack 0.32.3": "ℹ️[Туториал](https://t.me/sukunasoft/168)"
 }
 
