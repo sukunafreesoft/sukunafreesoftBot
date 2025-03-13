@@ -11,7 +11,7 @@ FILES_PC = {
 }
 
 FILES_ANDROID = {
-    "📱 [Android ROOT] Excellent Crack 0.32.3": "BQACAgQAAxkBAAMfZ8mX5LJ3TPKEAfjakG2psV1W35wAAogZAAJbzThSN_kk0FblCfI2BA"
+    "📱 [Android ROOT] Excellent Crack 0.32.3": "BQACAgIAAyEFAASKyTTrAAMKZ9J6MGXLPM4NLUNAiUDWwwrZz3oAAqpsAAKQ_JFKwTitg3eN_k42BA"
 }
 
 TEXTS = {
