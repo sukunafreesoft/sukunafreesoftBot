@@ -38,9 +38,9 @@ def send_welcome(message):
     handle_referral(user_id, message.text)
 
     markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton("📥 Софт", callback_data="download_files"))
-    markup.add(InlineKeyboardButton("ℹ Как установить ROOT", callback_data="tutor_root"))
-    markup.add(InlineKeyboardButton("👤 Профиль", callback_data="profile"))
+    markup.add(InlineKeyboardButton("👾 Читы", callback_data="download_files"))
+    markup.add(InlineKeyboardButton("ℹ Установка ROOT", callback_data="tutor_root"))
+    markup.add(InlineKeyboardButton("👤 Мой Профиль", callback_data="profile"))
 
     bot.send_message(user_id, "🗿 Доброго времени суток, выбирай что хочешь. \n\nНо сначала подпишись на мои проекты: \n Канал: @sukunasoft \n\nПереходник: @perexodniksukuna", reply_markup=markup)
 
