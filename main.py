@@ -39,6 +39,7 @@ def send_welcome(message):
 
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton("👾 Читы", callback_data="download_files"))
+    markup.add(InlineKeyboardButton("⚙️ Приложения", callback_data="download_apps"))
     markup.add(InlineKeyboardButton("ℹ Установка ROOT", callback_data="tutor_root"))
     markup.add(InlineKeyboardButton("👤 Профиль", callback_data="profile"))
 
@@ -52,7 +53,17 @@ def send_download_menu(call):
     markup.add(InlineKeyboardButton("💻 Desktop", callback_data="pc_files"))
     markup.add(InlineKeyboardButton("🔙 Назад", callback_data="back_main"))
 
-    bot.send_message(user_id, "🔽 Выбери категорию:", reply_markup=markup)
+    bot.send_message(user_id, "🔽 Android или Desktop? :", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda call: call.data == "download_apps")
+def send_download_menu(call):
+    user_id = call.from_user.id
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton("📱 Android", callback_data="android_apps"))
+    markup.add(InlineKeyboardButton("💻 Desktop", callback_data="pc_apps"))
+    markup.add(InlineKeyboardButton("🔙 Назад", callback_data="back_main"))
+
+    bot.send_message(user_id, "🔽 Android или Desktop? ", reply_markup=markup)
 
 @bot.callback_query_handler(func=lambda call: call.data == "android_files")
 def send_android_files(call):
