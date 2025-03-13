@@ -42,7 +42,7 @@ def send_welcome(message):
     markup.add(InlineKeyboardButton("ℹ Установка ROOT", callback_data="tutor_root"))
     markup.add(InlineKeyboardButton("👤 Мой Профиль", callback_data="profile"))
 
-    bot.send_message(user_id, "🗿 Доброго времени суток, выбирай что хочешь. \n\nНо сначала подпишись на мои проекты: \n Канал: @sukunasoft \n\nПереходник: @perexodniksukuna", reply_markup=markup)
+    bot.send_message(user_id, "☣️ Sukuna Free Soft \n\n💫 Поддержи подпиской : \n📢 Паблик @sukunasoft \n👣 Переходник @perexodniksukuna \n\n🔗 By @sukuna_renzaki", reply_markup=markup)
 
 @bot.callback_query_handler(func=lambda call: call.data == "download_files")
 def send_download_menu(call):
