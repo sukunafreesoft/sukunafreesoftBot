@@ -40,7 +40,7 @@ def send_welcome(message):
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton("👾 Читы", callback_data="download_files"))
     markup.add(InlineKeyboardButton("ℹ Установка ROOT", callback_data="tutor_root"))
-    markup.add(InlineKeyboardButton("👤 Мой Профиль", callback_data="profile"))
+    markup.add(InlineKeyboardButton("👤 Профиль", callback_data="profile"))
 
     bot.send_message(user_id, "☣️ Sukuna Free Soft \n\n💫 Поддержи подпиской : \n📢 Паблик @sukunasoft \n👣 Переходник @perexodniksukuna \n\n🔗 By @sukuna_renzaki", reply_markup=markup)
 
@@ -49,10 +49,10 @@ def send_download_menu(call):
     user_id = call.from_user.id
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton("📱 Android", callback_data="android_files"))
-    markup.add(InlineKeyboardButton("💻 ПК", callback_data="pc_files"))
+    markup.add(InlineKeyboardButton("💻 Desktop", callback_data="pc_files"))
     markup.add(InlineKeyboardButton("🔙 Назад", callback_data="back_main"))
 
-    bot.send_message(user_id, "🔽 Выберите категорию:", reply_markup=markup)
+    bot.send_message(user_id, "🔽 Выбери категорию:", reply_markup=markup)
 
 @bot.callback_query_handler(func=lambda call: call.data == "android_files")
 def send_android_files(call):
@@ -62,7 +62,7 @@ def send_android_files(call):
         markup.add(InlineKeyboardButton(app_name, callback_data=app_name))
 
     markup.add(InlineKeyboardButton("🔙 Назад", callback_data="download_files"))
-    bot.send_message(user_id, "📱 Выберите Android-приложение:", reply_markup=markup)
+    bot.send_message(user_id, "📱 Menu Android", reply_markup=markup)
 
 @bot.callback_query_handler(func=lambda call: call.data == "pc_files")
 def send_pc_files(call):
@@ -72,14 +72,14 @@ def send_pc_files(call):
         markup.add(InlineKeyboardButton(app_name, callback_data=app_name))
 
     markup.add(InlineKeyboardButton("🔙 Назад", callback_data="download_files"))
-    bot.send_message(user_id, "💻 Выберите программу для ПК:", reply_markup=markup)
+    bot.send_message(user_id, "💻 Menu Desktop", reply_markup=markup)
 
 @bot.callback_query_handler(func=lambda call: call.data in FILES_PC or call.data in FILES_ANDROID)
 def send_file(call):
     user_id = call.from_user.id
     if is_subscribed(user_id):
         file_id = FILES_PC.get(call.data) or FILES_ANDROID.get(call.data)
-        caption = TEXTS.get(call.data, "ℹ Инструкции пока нет.")
+        caption = TEXTS.get(call.data, "ℹ Туториала пока нет.")
         bot.send_document(user_id, file_id, caption=caption, parse_mode="Markdown")
     else:
         send_subscription_request(user_id)
@@ -90,16 +90,16 @@ def send_profile(call):
     referrals = get_user_referrals(user_id)
 
     markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton("📩 Пригласить друга", callback_data="send_invite_link"))
+    markup.add(InlineKeyboardButton("📩 Пригласить", callback_data="send_invite_link"))
     markup.add(InlineKeyboardButton("🔙 Назад", callback_data="back_main"))
 
-    bot.send_message(user_id, f"👤 Ваш профиль:\n👥 Приглашено пользователей: {referrals}", reply_markup=markup)
+    bot.send_message(user_id, f"👤 Твой профиль:\n👥 Приглашено: {referrals}", reply_markup=markup)
 
 @bot.callback_query_handler(func=lambda call: call.data == "send_invite_link")
 def send_invite_link(call):
     user_id = call.from_user.id
     invite_link = f"https://t.me/sukunafreesoftBot?start={user_id}"
-    bot.send_message(user_id, f"📩 Ваша реферальная ссылка:\n{invite_link}")
+    bot.send_message(user_id, f"📩 Твоя реферальная ссылка:\n{invite_link}")
 
 def send_subscription_request(user_id):
     markup = InlineKeyboardMarkup()
@@ -107,13 +107,13 @@ def send_subscription_request(user_id):
         markup.add(InlineKeyboardButton(f"Подписаться на {channel}", url=f"https://t.me/{channel[1:]}"))
     markup.add(InlineKeyboardButton("🔄 Проверить подписку", callback_data="check_sub"))
 
-    bot.send_message(user_id, "❌ Вы не подписаны на все каналы! Подпишитесь и попробуйте снова.", reply_markup=markup, parse_mode="Markdown")
+    bot.send_message(user_id, "❌ Ты не подписан на все каналы! Подпишись и попробуй снова.", reply_markup=markup, parse_mode="Markdown")
 
 @bot.callback_query_handler(func=lambda call: call.data == "check_sub")
 def check_subscription(call):
     user_id = call.from_user.id
     if is_subscribed(user_id):
-        bot.send_message(user_id, "✅ Подписка обнаружена! Теперь выберите файл для скачивания.")
+        bot.send_message(user_id, "✅ Подписка обнаружена! Попробуй ещё.")
     else:
         send_subscription_request(user_id)
 
@@ -128,7 +128,7 @@ def get_file_id(message):
     elif message.photo:
         file_id = message.photo[-1].file_id
 
-    bot.send_message(message.chat.id, f"📎 File ID: `{file_id}`", parse_mode="Markdown")
+    bot.send_message(message.chat.id, f"📎 File ID : \n`{file_id}`", parse_mode="Markdown")
 
 @bot.callback_query_handler(func=lambda call: call.data == "back_main")
 def back_to_main(call):
